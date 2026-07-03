@@ -1,0 +1,29 @@
+{
+  "name": "hyperflow-mcp",
+  "version": "0.1.0",
+  "description": "Bridge stdio para el MCP de HyperFlow (clientes sin soporte de HTTP remoto)",
+  "license": "MIT",
+  "author": "mcortezv",
+  "keywords": ["hyperflow", "mcp", "model-context-protocol", "stdio", "bridge"],
+  "type": "module",
+  "bin": {
+    "hyperflow-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "~5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
