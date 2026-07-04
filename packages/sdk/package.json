@@ -1,6 +1,6 @@
 {
   "name": "hyperflow-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "SDK TypeScript para los agentes de HyperFlow (via MCP Streamable HTTP)",
   "license": "MIT",
   "author": "mcortezv",

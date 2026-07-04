@@ -93,7 +93,7 @@ export class HyperFlow {
             headers: { Authorization: `Bearer ${this.options.apiKey}` },
           },
         });
-        const client = new Client({ name: 'hyperflow-sdk', version: '0.1.0' });
+        const client = new Client({ name: 'hyperflow-sdk', version: '0.1.1' });
         await client.connect(transport);
         return client;
       })();
