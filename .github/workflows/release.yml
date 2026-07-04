@@ -1,0 +1,53 @@
+name: Release
+
+# Publica a npm en cada push a main, pero SOLO los paquetes cuya versión local
+# no existe todavía en el registry (publish-on-version-bump). Releasear =
+# bumpear "version" en el package.json del paquete + push a main.
+#
+# Auth: npm Trusted Publishing (OIDC). Configura este repo + "release.yml"
+# como Trusted Publisher en hyperflow-sdk y hyperflow-mcp en npmjs.com.
+# Sin token, sin expiración. `id-token: write` abajo es lo que lo habilita.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/**"
+      - ".github/workflows/release.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # OIDC para npm Trusted Publishing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      # Trusted Publishing (OIDC) requiere npm >= 11.5; Node 20 trae npm 10.
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm run build
+      - run: npm run typecheck
+      - name: Publish packages with a new version
+        run: |
+          for dir in packages/sdk packages/mcp-bridge; do
+            name=$(node -p "require('./$dir/package.json').name")
+            version=$(node -p "require('./$dir/package.json').version")
+            published=$(npm view "$name@$version" version 2>/dev/null || true)
+            if [ "$published" = "$version" ]; then
+              echo "⏭  $name@$version ya está en npm — skip"
+            else
+              echo "🚀 Publicando $name@$version"
+              npm publish -w "$name"
+            fi
+          done

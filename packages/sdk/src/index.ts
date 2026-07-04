@@ -17,6 +17,11 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 
+import { ChatSession, type ChatStartOptions } from './chat.js';
+
+export { ChatSession } from './chat.js';
+export type { AgentRef, ChatSendOptions, ChatStartOptions, ChatTurn } from './chat.js';
+
 export interface HyperFlowOptions {
   /** URL del MCP nativo, p. ej. https://<host>/mcp */
   url: string;
@@ -196,6 +201,15 @@ export class HyperFlow {
         await sleep(interval, opts.signal);
       }
     },
+  };
+
+  readonly chat = {
+    /**
+     * Abre una sesión de chat con un agente publicado (Russell/Odin).
+     * El server fija la versión del agente al primer turno y la sesión
+     * la conserva aunque se publique una versión nueva.
+     */
+    start: (options: ChatStartOptions): ChatSession => new ChatSession(this, options),
   };
 
   readonly rag = {
