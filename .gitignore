@@ -2,3 +2,9 @@ node_modules/
 dist/
 *.log
 .env
+
+# Cualquier archivo de entorno (.env, .env.local, .env.bak-e2e, .env.production, prod.env...).
+# Solo .env.example se versiona.
+.env*
+*.env
+!.env.example
